@@ -165,7 +165,9 @@ fun LoginScreen(
                                     //.height(50.dp),
                                     singleLine = true,
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                                    isError = state.emailError != null,
                                     colors = TextFieldDefaults.colors(
+                                        errorContainerColor = Color.White,
                                         focusedContainerColor = Color.White, // Background color when focused
                                         unfocusedContainerColor = Color.White, // Background color when unfocused
                                         focusedTextColor = Color.Black, // Text color when focused
@@ -174,7 +176,12 @@ fun LoginScreen(
                                         cursorColor = Color.Black, // Cursor color
                                         focusedIndicatorColor = Color.Black, // No underline when focused
                                         unfocusedIndicatorColor = Color.Black // No underline when unfocused
-                                    )
+                                    ),
+                                    supportingText = {
+                                        state.emailError?.let { error ->
+                                            Text(text = error)
+                                        }
+                                    }
                                 )
 
                                 Spacer(modifier = Modifier.height(12.dp))

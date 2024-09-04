@@ -34,6 +34,7 @@ data class SignUpState(
     val confirmPasswordError: String? = null,
     val birthDate: String = "",
     val birthDateError: String? = null,
+    val isLoading: Boolean = false
 )
 
 sealed class ValidationEvent {
@@ -90,7 +91,12 @@ class SignUpViewModel @Inject constructor(
         state = state.copy(birthDate = input)
     }
 
+    private fun updateIsLoading(input: Boolean) {
+        state = state.copy(isLoading = input)
+    }
+
     private fun signUpClicked() {
+        updateIsLoading(true)
         val nameResult = validateName.execute(state.name)
         val emailResult = validateEmail.execute(state.email)
         val passwordResult = validatePassword.execute(state.password)
@@ -114,6 +120,7 @@ class SignUpViewModel @Inject constructor(
                 confirmPasswordError = confirmPasswordResult.errorMessage,
                 birthDateError = birthDateResult.errorMessage
             )
+            updateIsLoading(false)
             return
         }
 
@@ -126,9 +133,11 @@ class SignUpViewModel @Inject constructor(
             ).collect { result ->
                 when (result) {
                     is ApiResult.Error -> {
+                        updateIsLoading(false)
                         validationEventChannel.send(ValidationEvent.Failure(result.message))
                     }
                     is ApiResult.Success -> {
+                        updateIsLoading(false)
                         validationEventChannel.send(ValidationEvent.Success)
                     }
                 }

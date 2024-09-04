@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.loginapp.data.model.ApiResult
 import com.loginapp.data.model.SessionManager
 import com.loginapp.data.repository.LoginRepository
+import com.loginapp.domain.use_cases.ValidateEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.collectLatest
@@ -18,6 +19,7 @@ import javax.inject.Inject
 
 data class LoginState(
     val email: String = "",
+    val emailError: String? = null,
     val password: String = "",
     val isLoading: Boolean = false,
     val isAuthenticated: Boolean = false
@@ -25,8 +27,8 @@ data class LoginState(
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val validateEmail: ValidateEmail,
     private val loginRepository: LoginRepository,
-    //private val userSingleton: UserSingleton,
     private val sessionManager: SessionManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -80,8 +82,18 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login() {
+        updateIsLoading(true)
+        val emailResult = validateEmail.execute(state.email)
+
+        val hasError = !emailResult.successful
+        if (hasError) {
+            state = state.copy(
+                emailError = emailResult.errorMessage
+            )
+            updateIsLoading(false)
+            return
+        }
         viewModelScope.launch {
-            updateIsLoading(true)
             loginRepository.login(state.email, state.password).collectLatest { result ->
                 when (result) {
                     is ApiResult.Error -> {

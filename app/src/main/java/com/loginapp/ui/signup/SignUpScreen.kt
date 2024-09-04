@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -99,6 +100,7 @@ fun SignUpScreen(
     )
 
     val textFieldColors = TextFieldDefaults.colors(
+        errorContainerColor = Color.White,
         focusedContainerColor = Color.White, // Background color when focused
         unfocusedContainerColor = Color.White, // Background color when unfocused
         focusedTextColor = Color.Black, // Text color when focused
@@ -156,7 +158,8 @@ fun SignUpScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent
                         ),
-                        elevation = ButtonDefaults.buttonElevation(0.dp)
+                        elevation = ButtonDefaults.buttonElevation(0.dp),
+                        enabled = !state.isLoading
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
@@ -211,7 +214,7 @@ fun SignUpScreen(
                                 isError = state.nameError != null,
                                 modifier = Modifier.fillMaxWidth(),
                                 placeholder = {
-                                    Text(text = "Nome")
+                                    Text(text = "Nome", color = Color.Black)
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Email
@@ -229,7 +232,7 @@ fun SignUpScreen(
                                 isError = state.emailError != null,
                                 modifier = Modifier.fillMaxWidth(),
                                 placeholder = {
-                                    Text(text = "Email")
+                                    Text(text = "Email", color = Color.Black)
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Password
@@ -247,7 +250,7 @@ fun SignUpScreen(
                                 isError = state.passwordError != null,
                                 modifier = Modifier.fillMaxWidth(),
                                 placeholder = {
-                                    Text(text = "Senha")
+                                    Text(text = "Senha", color = Color.Black)
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Password
@@ -266,7 +269,7 @@ fun SignUpScreen(
                                 isError = state.confirmPasswordError != null,
                                 modifier = Modifier.fillMaxWidth(),
                                 placeholder = {
-                                    Text(text = "Confirme a senha")
+                                    Text(text = "Confirme a senha", color = Color.Black)
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.Email
@@ -290,7 +293,7 @@ fun SignUpScreen(
                                     onValueChange = { },
                                     isError = state.birthDateError != null,
                                     placeholder = {
-                                        Text(text = "Data de Nascimento")
+                                        Text(text = "Data de Nascimento", color = Color.Black)
                                     },
                                     modifier = Modifier.weight(1f),
                                     readOnly = true,
@@ -310,9 +313,10 @@ fun SignUpScreen(
                                         containerColor = Color(
                                             0xFF1C1C1C
                                         )
-                                    )
+                                    ),
+                                    enabled = !state.isLoading
                                 ) {
-                                    Text(text = "alterar")
+                                    Text(text = "alterar", color = Color.White, fontSize = 18.sp)
                                 }
                             }
                             Button(
@@ -324,9 +328,18 @@ fun SignUpScreen(
                                     containerColor = Color(
                                         0xFF1C1C1C
                                     )
-                                )
+                                ),
+                                enabled = !state.isLoading
                             ) {
-                                Text(text = "Cadastrar")
+                                if (state.isLoading) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier
+                                            .size(24.dp), // Set a fixed size for the indicator
+                                        strokeWidth = 2.dp
+                                    )
+                                } else {
+                                    Text(text = "Cadastrar", color = Color.White, fontSize = 18.sp)
+                                }
                             }
                         }
 
