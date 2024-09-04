@@ -4,14 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.loginapp.data.model.Screen
-import com.loginapp.ui.login.LoginAction
+import com.loginapp.data.model.SubGraph
+import com.loginapp.ui.home.HomeScreenRoot
 import com.loginapp.ui.login.LoginScreenRoot
 import com.loginapp.ui.signup.SignUpScreenRoot
 import com.loginapp.ui.theme.LoginAppTheme
@@ -31,26 +31,29 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Navigation(modifier: Modifier = Modifier){
+fun Navigation(){
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Screen.LoginScreen,
+        startDestination = SubGraph.Auth,
     ){
-        composable<Screen.LoginScreen>{
-            LoginScreenRoot(navController = navController)
+        navigation<SubGraph.Auth>(
+            startDestination = Screen.LoginScreen,
+        ) {
+            composable<Screen.LoginScreen> {
+                LoginScreenRoot(navController = navController)
+            }
+            composable<Screen.SignUpScreen> {
+                SignUpScreenRoot(navController = navController)
+            }
         }
-        composable<Screen.SignUpScreen>{
-            SignUpScreenRoot(navController = navController)
-        }
-        composable<Screen.HomeScreen>{
-            HomeScreen()
+        navigation<SubGraph.Home>(
+            startDestination = Screen.HomeScreen
+        ){
+            composable<Screen.HomeScreen> {
+                HomeScreenRoot(navController = navController)
+            }
         }
     }
-}
-
-@Composable
-fun HomeScreen(){
-    Text(text = "Home")
 }

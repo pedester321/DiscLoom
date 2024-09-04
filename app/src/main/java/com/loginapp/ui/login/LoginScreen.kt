@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.loginapp.R
 import com.loginapp.data.model.Screen
+import com.loginapp.data.model.SubGraph
 
 
 @Composable
@@ -54,7 +55,17 @@ fun LoginScreenRoot(
         state = viewModel.state,
         onAction = { action ->
             when (action) {
-                is LoginAction.GoTo -> navController.navigate(action.screen)
+                is LoginAction.GoTo -> {
+                    if(action.screen == Screen.HomeScreen){
+                        navController.navigate(SubGraph.Home){
+                            popUpTo(SubGraph.Auth) {
+                                inclusive = true
+                            }
+                        }
+                    }else{
+                        navController.navigate(action.screen)
+                    }
+                }
                 else -> Unit
             }
             viewModel.onAction(action)

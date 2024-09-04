@@ -2,13 +2,21 @@ package com.loginapp.data.model
 
 import kotlinx.serialization.Serializable
 
-sealed interface Screen {
+sealed class SubGraph{
     @Serializable
-    data object LoginScreen: Screen
+    data object Auth: SubGraph()
 
     @Serializable
-    data object SignUpScreen: Screen
+    data object Home: SubGraph()
+}
+
+sealed class Screen {
+    @Serializable
+    data object LoginScreen: Screen()
 
     @Serializable
-    data object HomeScreen: Screen
+    data object SignUpScreen: Screen()
+
+    @Serializable
+    data object HomeScreen: Screen()
 }

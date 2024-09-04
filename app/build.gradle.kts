@@ -80,6 +80,8 @@ dependencies {
 
     // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)
+    implementation (libs.moshi)
+    implementation (libs.moshi.kotlin)
 
     // Testing
     testImplementation(libs.junit)

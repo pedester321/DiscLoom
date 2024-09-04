@@ -2,7 +2,6 @@ package com.loginapp.di
 
 import android.content.Context
 import com.loginapp.data.model.SessionManager
-import com.loginapp.data.model.UserSingleton
 import com.loginapp.data.remote.LoginApi
 import com.loginapp.data.repository.LoginRepository
 import com.loginapp.domain.use_cases.ValidateBirthDate
@@ -33,15 +32,14 @@ object AppModule {
             .create()
     }
 
-    @Provides
-    @Singleton
-    fun provideUserSingleton(): UserSingleton = UserSingleton()
+//    @Provides
+//    @Singleton
+//    fun provideUserSingleton(): User = User()
 
     @Provides
-    fun provideLoginRepository(loginApi: LoginApi, userSingleton: UserSingleton): LoginRepository{
-        return LoginRepository(loginApi, userSingleton)
+    fun provideLoginRepository(loginApi: LoginApi): LoginRepository{
+        return LoginRepository(loginApi)
     }
-
 
     @Singleton
     @Provides

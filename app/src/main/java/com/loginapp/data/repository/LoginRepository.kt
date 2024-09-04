@@ -1,8 +1,6 @@
 package com.loginapp.data.repository
 
 import com.loginapp.data.model.ApiResult
-import com.loginapp.data.model.User
-import com.loginapp.data.model.UserSingleton
 import com.loginapp.data.remote.LoginApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,7 +11,6 @@ import java.io.IOException
 
 class LoginRepository(
     private val loginApi: LoginApi,
-    private val userSingleton: UserSingleton
 ){
     suspend fun login(email: String, password: String): Flow<ApiResult<String>> {
         return flow {
@@ -34,7 +31,6 @@ class LoginRepository(
                         val token = jsonObject?.getString("token")
 
                         if (token != null) {
-                            userSingleton.user = User(token)
                             emit(ApiResult.Success(token)) // Emite o token em caso de sucesso
                         } else {
                             emit(ApiResult.Error("Token não encontrado na resposta."))
