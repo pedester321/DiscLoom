@@ -1,5 +1,7 @@
 package com.loginapp.di
 
+import android.content.Context
+import com.loginapp.data.model.SessionManager
 import com.loginapp.data.model.UserSingleton
 import com.loginapp.data.remote.LoginApi
 import com.loginapp.data.repository.LoginRepository
@@ -11,6 +13,7 @@ import com.loginapp.domain.use_cases.ValidatePassword
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -39,6 +42,13 @@ object AppModule {
         return LoginRepository(loginApi, userSingleton)
     }
 
+
+    @Singleton
+    @Provides
+    fun provideSessionManager(@ApplicationContext context: Context): SessionManager {
+        return SessionManager(context)
+    }
+    // Use cases
     @Provides
     fun provideValidateEmail(): ValidateEmail = ValidateEmail()
 

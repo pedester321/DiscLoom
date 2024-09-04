@@ -13,22 +13,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -70,6 +67,13 @@ fun LoginScreen(
     state: LoginState,
     onAction: (LoginAction) -> Unit
 ) {
+
+    LaunchedEffect(key1 = state.isAuthenticated) {
+        if (state.isAuthenticated) {
+            onAction(LoginAction.GoTo(Screen.HomeScreen))
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -188,7 +192,7 @@ fun LoginScreen(
                                 Spacer(modifier = Modifier.height(12.dp))
 
                                 Button(
-                                    onClick = { onAction(LoginAction.LoginClicked)},
+                                    onClick = { onAction(LoginAction.LoginClicked) },
                                     modifier = Modifier
                                         .fillMaxWidth(),
                                     shape = RoundedCornerShape(4.dp),
@@ -196,9 +200,20 @@ fun LoginScreen(
                                         containerColor = Color(
                                             0xFF1C1C1C
                                         )
-                                    )
+                                    ),
+                                    enabled = !state.isLoading
                                 ) {
-                                    Text("Sign In", color = Color.White, fontSize = 18.sp)
+                                    Box(contentAlignment = Alignment.Center) {
+                                        if (state.isLoading) {
+                                            CircularProgressIndicator(
+                                                modifier = Modifier
+                                                    .size(24.dp), // Set a fixed size for the indicator
+                                                strokeWidth = 2.dp
+                                            )
+                                        } else {
+                                            Text("Sign In", color = Color.White, fontSize = 18.sp)
+                                        }
+                                    }
                                 }
 
                                 Spacer(modifier = Modifier.height(16.dp))
@@ -213,11 +228,13 @@ fun LoginScreen(
                         //Fim da surface
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        Button(onClick = { onAction(LoginAction.GoTo(Screen.SignUpScreen))},
+                        Button(
+                            onClick = { onAction(LoginAction.GoTo(Screen.SignUpScreen)) },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color.Transparent // Definindo o fundo transparente, ou você pode escolher outra cor
                             ),
-                            elevation = ButtonDefaults.buttonElevation(0.dp) // Sem elevaçã
+                            elevation = ButtonDefaults.buttonElevation(0.dp), // Sem elevaçã
+                            enabled = !state.isLoading
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -249,7 +266,9 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     LoginScreen(
-        state = LoginState(),
+        state = LoginState(
+            isLoading = false
+        ),
         onAction = {}
     )
 }

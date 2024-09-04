@@ -95,6 +95,8 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.material.icons.extended)
 
+    //Crypto
+    implementation(libs.androidx.security.crypto)
 
 }
 
@@ -102,16 +104,3 @@ kapt {
     correctErrorTypes = true
 }
 
-////dagger hilt
-//    implementation(libs.hilt.android)
-//    kapt(libs.hilt.android.compiler)
-//    implementation (libs.androidx.hilt.navigation.compose)
-//    implementation (libs.androidx.lifecycle.viewmodel.compose)
-//
-//    //serialization
-//    implementation(libs.kotlinx.serialization.json)
-//
-//    //retrofit
-//    implementation (libs.retrofit)
-//    implementation (libs.converter.moshi)
-//    implementation (libs.logging.interceptor)
